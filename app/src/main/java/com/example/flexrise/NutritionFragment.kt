@@ -19,6 +19,7 @@ class NutritionFragment : Fragment() {
     private lateinit var tvIntakeDisplay: TextView
     private lateinit var pbIntake: ProgressBar
     private lateinit var calendarContainer: LinearLayout
+    private lateinit var hsvCalendar: HorizontalScrollView
     private lateinit var tvMonth: TextView
 
     // Meal Card Views
@@ -36,6 +37,7 @@ class NutritionFragment : Fragment() {
     private val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     private val todayDate = sdf.format(Date())
     private var selectedDate = todayDate
+    private var lastObservedDate: String? = null
 
     private val TARGET_CALORIES = 2000
     private var dateValueListener: ValueEventListener? = null
@@ -49,6 +51,7 @@ class NutritionFragment : Fragment() {
         tvIntakeDisplay = view.findViewById(R.id.tv_intake_display)
         pbIntake = view.findViewById(R.id.pb_intake)
         calendarContainer = view.findViewById(R.id.nutrition_calendar_container)
+        hsvCalendar = view.findViewById(R.id.hsv_nutrition_calendar)
         tvMonth = view.findViewById(R.id.tv_nutrition_month)
 
         tvBreakfastDesc = view.findViewById(R.id.tv_breakfast_desc)
@@ -60,7 +63,8 @@ class NutritionFragment : Fragment() {
         tvSnacksDesc = view.findViewById(R.id.tv_snacks_desc)
         tvSnacksKcal = view.findViewById(R.id.tv_snacks_kcal)
 
-        setupCalendar()
+        resetUI()
+        setupCalendar(true) 
         setupMealClickListeners(view)
         observeDataForDate(selectedDate)
         setupNavigation(view)
@@ -68,17 +72,32 @@ class NutritionFragment : Fragment() {
         return view
     }
 
-    private fun setupCalendar() {
+    private fun resetUI() {
+        tvIntakeDisplay.text = "0 / $TARGET_CALORIES kcal"
+        pbIntake.progress = 0
+        tvBreakfastDesc.text = "Tap to log"
+        tvBreakfastKcal.text = "0 kcal"
+        tvLunchDesc.text = "Tap to log"
+        tvLunchKcal.text = "0 kcal"
+        tvDinnerDesc.text = "Tap to log"
+        tvDinnerKcal.text = "0 kcal"
+        tvSnacksDesc.text = "Tap to log"
+        tvSnacksKcal.text = "0 kcal"
+    }
+
+    private fun setupCalendar(shouldScrollToToday: Boolean = false) {
         calendarContainer.removeAllViews()
         val calendar = Calendar.getInstance()
+        
         val monthYearSdf = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
         tvMonth.text = monthYearSdf.format(calendar.time)
 
-        val currentMonth = calendar.get(Calendar.MONTH)
-        calendar.set(Calendar.DAY_OF_MONTH, 1)
         val dayNameSdf = SimpleDateFormat("EEE", Locale.getDefault())
 
-        while (calendar.get(Calendar.MONTH) == currentMonth) {
+        // Match HomeFragment: 14 days ending today
+        calendar.add(Calendar.DAY_OF_YEAR, -13)
+
+        for (i in 0 until 14) {
             val dateStr = sdf.format(calendar.time)
             val dayName = dayNameSdf.format(calendar.time)
             val dayNum = calendar.get(Calendar.DAY_OF_MONTH).toString()
@@ -108,16 +127,27 @@ class NutritionFragment : Fragment() {
             }
 
             calendarContainer.addView(dayView)
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+        }
+
+        if (shouldScrollToToday) {
+            hsvCalendar.post {
+                hsvCalendar.fullScroll(View.FOCUS_RIGHT)
+            }
         }
     }
 
     private fun observeDataForDate(date: String) {
         val uid = auth.currentUser?.uid ?: return
         
-        dateValueListener?.let {
-            database.reference.child("ActivityLogs").child(uid).child(selectedDate).child("meals").removeEventListener(it)
+        // Proper listener cleanup using lastObservedDate
+        lastObservedDate?.let { oldDate ->
+            dateValueListener?.let {
+                database.reference.child("ActivityLogs").child(uid).child(oldDate).child("meals").removeEventListener(it)
+            }
         }
+        
+        lastObservedDate = date
 
         dateValueListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -159,21 +189,17 @@ class NutritionFragment : Fragment() {
     }
 
     private fun setupMealClickListeners(view: View) {
-        view.findViewById<View>(R.id.card_breakfast).setOnClickListener { 
-            if (selectedDate == todayDate) showLogMealDialog("breakfast") 
-            else Toast.makeText(context, "History is read-only", Toast.LENGTH_SHORT).show()
-        }
-        view.findViewById<View>(R.id.card_lunch).setOnClickListener { 
-            if (selectedDate == todayDate) showLogMealDialog("lunch")
-            else Toast.makeText(context, "History is read-only", Toast.LENGTH_SHORT).show()
-        }
-        view.findViewById<View>(R.id.card_dinner).setOnClickListener { 
-            if (selectedDate == todayDate) showLogMealDialog("dinner")
-            else Toast.makeText(context, "History is read-only", Toast.LENGTH_SHORT).show()
-        }
-        view.findViewById<View>(R.id.card_snacks).setOnClickListener { 
-            if (selectedDate == todayDate) showLogMealDialog("snacks")
-            else Toast.makeText(context, "History is read-only", Toast.LENGTH_SHORT).show()
+        val cards = listOf(R.id.card_breakfast, R.id.card_lunch, R.id.card_dinner, R.id.card_snacks)
+        val types = listOf("breakfast", "lunch", "dinner", "snacks")
+        
+        for (i in cards.indices) {
+            view.findViewById<View>(cards[i]).setOnClickListener { 
+                if (selectedDate == todayDate) {
+                    showLogMealDialog(types[i]) 
+                } else {
+                    Toast.makeText(context, "History is read-only", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -210,7 +236,6 @@ class NutritionFragment : Fragment() {
             "name" to name,
             "calories" to calories
         )
-        // Safety: even if called, only allow saving to todayDate
         database.reference.child("ActivityLogs").child(uid).child(todayDate).child("meals").child(type)
             .setValue(mealData)
     }
