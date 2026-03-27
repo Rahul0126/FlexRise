@@ -1,4 +1,4 @@
-package com.example.flexrise
+package com.example.flexrise.controller
 
 import android.Manifest
 import android.content.Context
@@ -9,48 +9,60 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.flexrise.model.WorkoutRecommendation
 import androidx.fragment.app.Fragment
+import com.example.flexrise.controller.ActivityFragment
+import com.example.flexrise.controller.NutritionFragment
+import com.example.flexrise.controller.ProfileFragment
+import com.example.flexrise.controller.WorkoutAdapter
+import com.example.flexrise.controller.WorkoutDetailFragment
+import com.example.flexrise.R
+import com.example.flexrise.controller.WorkoutFragment
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class HomeFragment : Fragment(), SensorEventListener {
 
     private var sensorManager: SensorManager? = null
     private var stepSensor: Sensor? = null
     private var isSensorPresent = false
-    
+
     private lateinit var tvSteps: TextView
     private lateinit var progressBar: ProgressBar
+
     private lateinit var tvPercentage: TextView
     private lateinit var tvGoals: TextView
     private lateinit var calendarContainer: LinearLayout
-    private lateinit var hsvCalendar: HorizontalScrollView
     private lateinit var tvMonth: TextView
-    
+
     private lateinit var tvTargetKcal: TextView
     private lateinit var tvBurnedKcal: TextView
     private lateinit var tvRemainingKcal: TextView
-    
+
+    private lateinit var recyclerWorkouts: RecyclerView
+
     private var savedSteps = 0
-    private var baseSensorValue = -1f 
+    private var baseSensorValue = -1f
     private var isDataLoaded = false
-    
+
     private val auth = FirebaseAuth.getInstance()
     private val database = FirebaseDatabase.getInstance()
     private val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -82,15 +94,17 @@ class HomeFragment : Fragment(), SensorEventListener {
         tvPercentage = view.findViewById(R.id.tv_percentage)
         tvGoals = view.findViewById(R.id.tv_goals_value)
         calendarContainer = view.findViewById(R.id.calendar_container)
-        hsvCalendar = view.findViewById(R.id.hsv_calendar)
         tvMonth = view.findViewById(R.id.tv_month)
-        
+
         tvTargetKcal = view.findViewById(R.id.tv_target_kcal)
         tvBurnedKcal = view.findViewById(R.id.tv_burned_kcal)
         tvRemainingKcal = view.findViewById(R.id.tv_remaining_kcal)
 
-        updateUI(0, 0)
-        setupCalendar(true) // Pass true to scroll to today on first load
+        recyclerWorkouts = view.findViewById(R.id.recycler_workouts)
+        setupWorkoutRecommendations()
+
+        updateUI(0, 0) // Initialize with 0
+        setupCalendar()
         checkPermissionsAndSetup()
         observeDataForDate(selectedDate)
         setupNavigation(view)
@@ -98,19 +112,17 @@ class HomeFragment : Fragment(), SensorEventListener {
         return view
     }
 
-    private fun setupCalendar(shouldScrollToToday: Boolean = false) {
+    private fun setupCalendar() {
         calendarContainer.removeAllViews()
         val calendar = Calendar.getInstance()
-        
         val monthYearSdf = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
         tvMonth.text = monthYearSdf.format(calendar.time)
 
+        val currentMonth = calendar.get(Calendar.MONTH)
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
         val dayNameSdf = SimpleDateFormat("EEE", Locale.getDefault())
 
-        // Show the last 14 days to provide a good history range
-        calendar.add(Calendar.DAY_OF_YEAR, -13)
-
-        for (i in 0 until 14) {
+        while (calendar.get(Calendar.MONTH) == currentMonth) {
             val dateStr = sdf.format(calendar.time)
             val dayName = dayNameSdf.format(calendar.time)
             val dayNum = calendar.get(Calendar.DAY_OF_MONTH).toString()
@@ -140,13 +152,7 @@ class HomeFragment : Fragment(), SensorEventListener {
             }
 
             calendarContainer.addView(dayView)
-            calendar.add(Calendar.DAY_OF_YEAR, 1)
-        }
-
-        if (shouldScrollToToday) {
-            hsvCalendar.post {
-                hsvCalendar.fullScroll(View.FOCUS_RIGHT)
-            }
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
     }
 
@@ -154,27 +160,27 @@ class HomeFragment : Fragment(), SensorEventListener {
 
     private fun observeDataForDate(date: String) {
         val uid = auth.currentUser?.uid ?: return
-        
+
         dateValueListener?.let {
             database.reference.child("ActivityLogs").child(uid).child(selectedDate).removeEventListener(it)
         }
 
         if (date != todayDate) {
-            isDataLoaded = true 
+            isDataLoaded = true
         } else {
-            isDataLoaded = false 
+            isDataLoaded = false
         }
 
         dateValueListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val steps = snapshot.child("steps").getValue(Int::class.java) ?: 0
                 val burnedCalories = snapshot.child("burned_calories").getValue(Int::class.java) ?: (steps * 0.04).toInt()
-                
+
                 if (date == todayDate) {
                     savedSteps = steps
                     isDataLoaded = true
                 }
-                
+
                 updateUI(steps, burnedCalories)
             }
 
@@ -182,7 +188,7 @@ class HomeFragment : Fragment(), SensorEventListener {
                 updateUI(0, 0)
             }
         }
-        
+
         database.reference.child("ActivityLogs").child(uid).child(date)
             .addValueEventListener(dateValueListener!!)
     }
@@ -210,8 +216,10 @@ class HomeFragment : Fragment(), SensorEventListener {
 
     private fun updateUI(steps: Int, burnedCalories: Int) {
         tvSteps.text = steps.toString()
+
+        // Use the actual burned calories passed in
         val remaining = (TARGET_CALORIES - burnedCalories).coerceAtLeast(0)
-        
+
         tvTargetKcal.text = "Target: $TARGET_CALORIES kcal"
         tvBurnedKcal.text = "Burned: $burnedCalories kcal"
         tvRemainingKcal.text = "Remaining: $remaining kcal"
@@ -225,18 +233,18 @@ class HomeFragment : Fragment(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER && isDataLoaded && selectedDate == todayDate) {
             val currentSensorValue = event.values[0]
-            
+
             if (baseSensorValue == -1f) {
                 baseSensorValue = currentSensorValue - savedSteps
             }
-            
+
             if (currentSensorValue < baseSensorValue) {
                 baseSensorValue = currentSensorValue
-                savedSteps = 0 
+                savedSteps = 0
             }
 
             val todaySteps = (currentSensorValue - baseSensorValue).toInt()
-            
+
             if (todaySteps > savedSteps) {
                 savedSteps = todaySteps
                 val calories = (todaySteps * 0.04).toInt()
@@ -277,13 +285,51 @@ class HomeFragment : Fragment(), SensorEventListener {
                 .commit()
         }
         view.findViewById<View>(R.id.nav_activity).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, ActivityFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                ActivityFragment()
+            ).commit()
         }
         view.findViewById<View>(R.id.nav_nutrition).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, NutritionFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                NutritionFragment()
+            ).commit()
         }
         view.findViewById<View>(R.id.nav_profile).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                ProfileFragment()
+            ).commit()
         }
     }
+
+    private fun setupWorkoutRecommendations() {
+
+        val workouts = WorkoutRecommendation.getDailyWorkouts()
+
+        val adapter = WorkoutAdapter(workouts) { workout ->
+
+            val fragment = WorkoutDetailFragment()
+
+            val bundle = Bundle()
+            bundle.putString("name", workout.name)
+            bundle.putString("slogan", workout.slogan)
+            bundle.putInt("duration", workout.duration)
+            bundle.putInt("calories", workout.calories)
+
+            fragment.arguments = bundle
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        recyclerWorkouts.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+        recyclerWorkouts.adapter = adapter
+    }
+
 }

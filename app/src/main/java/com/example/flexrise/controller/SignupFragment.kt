@@ -1,4 +1,4 @@
-package com.example.flexrise
+package com.example.flexrise.controller
 
 import android.os.Bundle
 import android.text.Html
@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import com.example.flexrise.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -25,7 +26,7 @@ class SignupFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_signup, container, false)
-        
+
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
@@ -72,14 +73,14 @@ class SignupFragment : Fragment() {
                             "height" to "0",
                             "weight" to "0"
                         )
-                        
+
                         userId?.let { uid ->
                             database.reference.child("Users").child(uid).setValue(userMap)
                                 .addOnCompleteListener { dbTask ->
                                     if (dbTask.isSuccessful) {
                                         Log.d("SignupFragment", "Database write successful, navigating...")
                                         Toast.makeText(requireContext(), "Account Created Successfully!", Toast.LENGTH_SHORT).show()
-                                        
+
                                         requireActivity().supportFragmentManager.beginTransaction()
                                             .replace(R.id.fragment_container, HomeFragment())
                                             .commitAllowingStateLoss()
@@ -97,7 +98,7 @@ class SignupFragment : Fragment() {
                     }
                 }
         }
-        
+
         return view
     }
 }

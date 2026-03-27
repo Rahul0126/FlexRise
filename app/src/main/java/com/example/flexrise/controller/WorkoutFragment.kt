@@ -1,4 +1,4 @@
-package com.example.flexrise
+package com.example.flexrise.controller
 
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -9,14 +9,15 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import java.util.*
+import com.example.flexrise.R
+import java.util.Locale
 
 class WorkoutFragment : Fragment() {
 
     private lateinit var tvDurationValue: TextView
     private lateinit var tvWorkoutCalories: TextView
     private lateinit var btnStartWorkout: Button
-    
+
     private var countDownTimer: CountDownTimer? = null
     private var isWorkoutRunning = false
     private val totalTimeMs: Long = 45 * 60 * 1000 // 45 minutes
@@ -53,16 +54,28 @@ class WorkoutFragment : Fragment() {
 
         // Bottom Navigation logic
         view.findViewById<View>(R.id.nav_home)?.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                HomeFragment()
+            ).commit()
         }
         view.findViewById<View>(R.id.nav_activity)?.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, ActivityFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                ActivityFragment()
+            ).commit()
         }
         view.findViewById<View>(R.id.nav_nutrition)?.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, NutritionFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                NutritionFragment()
+            ).commit()
         }
         view.findViewById<View>(R.id.nav_profile)?.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                ProfileFragment()
+            ).commit()
         }
 
         return view
@@ -72,10 +85,10 @@ class WorkoutFragment : Fragment() {
         if (timeRemainingMs <= 0) {
             timeRemainingMs = totalTimeMs // Reset if it was finished
         }
-        
+
         isWorkoutRunning = true
         btnStartWorkout.text = "Stop Workout"
-        
+
         countDownTimer = object : CountDownTimer(timeRemainingMs, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timeRemainingMs = millisUntilFinished
@@ -101,10 +114,10 @@ class WorkoutFragment : Fragment() {
         val secondsRemaining = remainingMs / 1000
         val minutes = secondsRemaining / 60
         val seconds = secondsRemaining % 60
-        
+
         // Update Duration UI
-        tvDurationValue.text = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
-        
+        tvDurationValue.text = String.Companion.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+
         // Update Calories UI (proportional to time elapsed)
         val timeElapsedMs = totalTimeMs - remainingMs
         val caloriesBurned = (timeElapsedMs.toFloat() / totalTimeMs.toFloat() * totalCalories).toInt()

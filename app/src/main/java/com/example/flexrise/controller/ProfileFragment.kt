@@ -1,16 +1,20 @@
-package com.example.flexrise
+package com.example.flexrise.controller
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.example.flexrise.HelpSupportFragment
+import com.example.flexrise.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class ProfileFragment : Fragment() {
 
@@ -28,7 +32,7 @@ class ProfileFragment : Fragment() {
         val tvProfileName = view.findViewById<TextView>(R.id.tv_profile_name)
         val tvHeight = view.findViewById<TextView>(R.id.tv_height_display)
         val tvWeight = view.findViewById<TextView>(R.id.tv_weight_display)
-        
+
         val editProfileItem = view.findViewById<TextView>(R.id.tv_edit_profile)
         val notificationsItem = view.findViewById<TextView>(R.id.tv_notifications)
         val privacySecurityItem = view.findViewById<TextView>(R.id.tv_privacy_security)
@@ -38,8 +42,8 @@ class ProfileFragment : Fragment() {
         // Fetch and update user data from Firebase in real-time
         val uid = auth.currentUser?.uid
         if (uid != null) {
-            database.reference.child("Users").child(uid).addValueEventListener(object : com.google.firebase.database.ValueEventListener {
-                override fun onDataChange(snapshot: com.google.firebase.database.DataSnapshot) {
+            database.reference.child("Users").child(uid).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         val name = snapshot.child("name").getValue(String::class.java)
                         val height = snapshot.child("height").getValue(String::class.java) ?: "0"
@@ -55,7 +59,7 @@ class ProfileFragment : Fragment() {
                         }
                     }
                 }
-                override fun onCancelled(error: com.google.firebase.database.DatabaseError) {}
+                override fun onCancelled(error: DatabaseError) {}
             })
         }
 
@@ -101,13 +105,22 @@ class ProfileFragment : Fragment() {
 
         // Bottom Navigation logic
         view.findViewById<View>(R.id.nav_home).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                HomeFragment()
+            ).commit()
         }
         view.findViewById<View>(R.id.nav_activity).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, ActivityFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                ActivityFragment()
+            ).commit()
         }
         view.findViewById<View>(R.id.nav_nutrition).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, NutritionFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                NutritionFragment()
+            ).commit()
         }
 
         return view

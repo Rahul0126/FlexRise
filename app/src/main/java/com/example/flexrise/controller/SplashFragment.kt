@@ -1,4 +1,4 @@
-package com.example.flexrise
+package com.example.flexrise.controller
 
 import android.os.Bundle
 import android.os.Handler
@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.flexrise.R
+import com.example.flexrise.controller.SignupFragment
 import com.google.firebase.auth.FirebaseAuth
 
 class SplashFragment : Fragment() {

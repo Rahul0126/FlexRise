@@ -2,7 +2,7 @@
     <string name="app_name">FlexRise</string>
     <string name="tagline">Build Strength - Elevate Life</string>
     <string name="footer_text">Your personal fitness companion</string>
-    
+
     <string name="create_account">Create Account</string>
     <string name="signup_subtitle">Start your fitness journey</string>
     <string name="hint_full_name">Full Name</string>
@@ -102,7 +102,6 @@
     <string name="water_intake">Water Intake</string>
     <string name="account">Account</string>
     <string name="app_update">App Update</string>
-
-    <string name="dummy_privacy_policy">Your privacy is important to us. FlexRise collects activity data like steps and calories to help you track your fitness. We do not share your personal information with third parties. Your data is securely stored in Firebase and accessible only by you.</string>
-    <string name="dummy_terms_service">By using FlexRise, you agree to track your fitness responsibly. We are not liable for any injuries sustained during workouts. Users are responsible for maintaining the confidentiality of their accounts and passwords.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

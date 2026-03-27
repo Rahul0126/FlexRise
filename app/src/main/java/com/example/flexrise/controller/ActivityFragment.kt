@@ -1,30 +1,34 @@
-package com.example.flexrise
+package com.example.flexrise.controller
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.flexrise.controller.NutritionFragment
+import com.example.flexrise.controller.ProfileFragment
+import com.example.flexrise.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import kotlin.collections.iterator
 
 class ActivityFragment : Fragment() {
 
     private val auth = FirebaseAuth.getInstance()
     private val database = FirebaseDatabase.getInstance()
     private val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    
+
     private lateinit var tvSteps: TextView
     private lateinit var tvCalories: TextView
     private lateinit var tvDistance: TextView
-    
+
     private val progressBars = mutableMapOf<String, ProgressBar>()
     private val calendarViews = mutableMapOf<String, TextView>()
     private val weekDateMap = mutableMapOf<String, String>() // Map "Mon" -> "2024-03-04"
@@ -68,18 +72,18 @@ class ActivityFragment : Fragment() {
     private fun loadWeeklyData() {
         val uid = auth.currentUser?.uid ?: return
         val calendar = Calendar.getInstance()
-        
+
         // Ensure we calculate correctly for current week starting Monday
         calendar.firstDayOfWeek = Calendar.MONDAY
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
-        
+
         val weekDays = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
         val todayStr = sdf.format(Date())
 
         for (dayName in weekDays) {
             val dateStr = sdf.format(calendar.time)
             weekDateMap[dayName] = dateStr
-            
+
             // Highlight today by default
             if (dateStr == todayStr) {
                 highlightSelectedDay(dayName)
@@ -89,13 +93,13 @@ class ActivityFragment : Fragment() {
                 .get().addOnSuccessListener { snapshot ->
                     val steps = snapshot.getValue(Int::class.java) ?: 0
                     progressBars[dayName]?.progress = steps
-                    
+
                     // Show today's data in stat cards on initial load
                     if (dateStr == todayStr) {
                         updateMainStats(steps)
                     }
                 }
-            
+
             calendar.add(Calendar.DAY_OF_YEAR, 1)
         }
     }
@@ -143,14 +147,23 @@ class ActivityFragment : Fragment() {
 
     private fun setupNavigation(view: View) {
         view.findViewById<View>(R.id.nav_home).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                HomeFragment()
+            ).commit()
         }
         view.findViewById<View>(R.id.nav_activity).setOnClickListener { }
         view.findViewById<View>(R.id.nav_nutrition).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, NutritionFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                NutritionFragment()
+            ).commit()
         }
         view.findViewById<View>(R.id.nav_profile).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
+            parentFragmentManager.beginTransaction().replace(
+                R.id.fragment_container,
+                ProfileFragment()
+            ).commit()
         }
     }
 }

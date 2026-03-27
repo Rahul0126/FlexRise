@@ -1,4 +1,4 @@
-package com.example.flexrise
+package com.example.flexrise.controller
 
 import android.net.Uri
 import android.os.Bundle
@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.example.flexrise.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -29,7 +30,7 @@ class EditProfileFragment : Fragment() {
     private lateinit var etEmail: EditText
     private lateinit var etWeight: EditText
     private lateinit var etHeight: EditText
-    
+
     private var selectedImageUri: Uri? = null
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -62,7 +63,7 @@ class EditProfileFragment : Fragment() {
                     etEmail.setText(snapshot.child("email").getValue(String::class.java))
                     etWeight.setText(snapshot.child("weight").getValue(String::class.java))
                     etHeight.setText(snapshot.child("height").getValue(String::class.java))
-                    
+
                     val imageUrl = snapshot.child("profileImage").getValue(String::class.java)
                     if (imageUrl != null) {
                         Glide.with(this).load(imageUrl).placeholder(R.drawable.profile_avatar).into(ivProfile)
@@ -101,7 +102,7 @@ class EditProfileFragment : Fragment() {
 
     private fun uploadImageAndSaveData(uid: String, name: String, email: String, weight: String, height: String) {
         val storageRef = storage.reference.child("profile_images/$uid.jpg")
-        
+
         storageRef.putFile(selectedImageUri!!)
             .addOnSuccessListener {
                 storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
