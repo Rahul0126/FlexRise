@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.example.flexrise.HelpSupportFragment
 import com.example.flexrise.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -34,6 +35,8 @@ class ProfileFragment : Fragment() {
 
         val editProfileItem = view.findViewById<TextView>(R.id.tv_edit_profile)
         val notificationsItem = view.findViewById<TextView>(R.id.tv_notifications)
+        val privacySecurityItem = view.findViewById<TextView>(R.id.tv_privacy_security)
+        val helpSupportItem = view.findViewById<TextView>(R.id.tv_help_support)
         val logoutItem = view.findViewById<TextView>(R.id.tv_logout)
 
         // Fetch and update user data from Firebase in real-time
@@ -72,6 +75,22 @@ class ProfileFragment : Fragment() {
         notificationsItem?.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, NotificationsFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        // Navigation to Privacy & Security
+        privacySecurityItem?.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, PrivacySecurityFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        // Navigation to Help & Support
+        helpSupportItem?.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, HelpSupportFragment())
                 .addToBackStack(null)
                 .commit()
         }

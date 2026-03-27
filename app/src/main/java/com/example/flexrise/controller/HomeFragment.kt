@@ -9,9 +9,11 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -22,13 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flexrise.model.WorkoutRecommendation
 import androidx.fragment.app.Fragment
-import com.example.flexrise.controller.ActivityFragment
-import com.example.flexrise.controller.NutritionFragment
-import com.example.flexrise.controller.ProfileFragment
-import com.example.flexrise.controller.WorkoutAdapter
-import com.example.flexrise.controller.WorkoutDetailFragment
 import com.example.flexrise.R
-import com.example.flexrise.controller.WorkoutFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -51,6 +47,7 @@ class HomeFragment : Fragment(), SensorEventListener {
     private lateinit var tvPercentage: TextView
     private lateinit var tvGoals: TextView
     private lateinit var calendarContainer: LinearLayout
+    private lateinit var hsvCalendar: HorizontalScrollView
     private lateinit var tvMonth: TextView
 
     private lateinit var tvTargetKcal: TextView
@@ -94,6 +91,7 @@ class HomeFragment : Fragment(), SensorEventListener {
         tvPercentage = view.findViewById(R.id.tv_percentage)
         tvGoals = view.findViewById(R.id.tv_goals_value)
         calendarContainer = view.findViewById(R.id.calendar_container)
+        hsvCalendar = view.findViewById(R.id.hsv_calendar)
         tvMonth = view.findViewById(R.id.tv_month)
 
         tvTargetKcal = view.findViewById(R.id.tv_target_kcal)
@@ -103,8 +101,8 @@ class HomeFragment : Fragment(), SensorEventListener {
         recyclerWorkouts = view.findViewById(R.id.recycler_workouts)
         setupWorkoutRecommendations()
 
-        updateUI(0, 0) // Initialize with 0
-        setupCalendar()
+        updateUI(0, 0)
+        setupCalendar(true) 
         checkPermissionsAndSetup()
         observeDataForDate(selectedDate)
         setupNavigation(view)
@@ -112,17 +110,19 @@ class HomeFragment : Fragment(), SensorEventListener {
         return view
     }
 
-    private fun setupCalendar() {
+    private fun setupCalendar(shouldScrollToToday: Boolean = false) {
         calendarContainer.removeAllViews()
         val calendar = Calendar.getInstance()
+        
         val monthYearSdf = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
         tvMonth.text = monthYearSdf.format(calendar.time)
 
-        val currentMonth = calendar.get(Calendar.MONTH)
-        calendar.set(Calendar.DAY_OF_MONTH, 1)
         val dayNameSdf = SimpleDateFormat("EEE", Locale.getDefault())
 
-        while (calendar.get(Calendar.MONTH) == currentMonth) {
+        // Show the last 14 days (13 past + today)
+        calendar.add(Calendar.DAY_OF_YEAR, -13)
+
+        for (i in 0 until 14) {
             val dateStr = sdf.format(calendar.time)
             val dayName = dayNameSdf.format(calendar.time)
             val dayNum = calendar.get(Calendar.DAY_OF_MONTH).toString()
@@ -152,7 +152,13 @@ class HomeFragment : Fragment(), SensorEventListener {
             }
 
             calendarContainer.addView(dayView)
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+        }
+
+        if (shouldScrollToToday) {
+            hsvCalendar.post {
+                hsvCalendar.fullScroll(View.FOCUS_RIGHT)
+            }
         }
     }
 
@@ -217,11 +223,11 @@ class HomeFragment : Fragment(), SensorEventListener {
     private fun updateUI(steps: Int, burnedCalories: Int) {
         tvSteps.text = steps.toString()
 
-        // Use the actual burned calories passed in
-        val remaining = (TARGET_CALORIES - burnedCalories).coerceAtLeast(0)
+        val calories = if (burnedCalories == -1) (steps * 0.04).toInt() else burnedCalories
+        val remaining = (TARGET_CALORIES - calories).coerceAtLeast(0)
 
         tvTargetKcal.text = "Target: $TARGET_CALORIES kcal"
-        tvBurnedKcal.text = "Burned: $burnedCalories kcal"
+        tvBurnedKcal.text = "Burned: $calories kcal"
         tvRemainingKcal.text = "Remaining: $remaining kcal"
 
         val percentage = if (TARGET_STEPS > 0) (steps.toFloat() / TARGET_STEPS.toFloat() * 100).toInt() else 0
@@ -285,51 +291,32 @@ class HomeFragment : Fragment(), SensorEventListener {
                 .commit()
         }
         view.findViewById<View>(R.id.nav_activity).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(
-                R.id.fragment_container,
-                ActivityFragment()
-            ).commit()
+            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, ActivityFragment()).commit()
         }
         view.findViewById<View>(R.id.nav_nutrition).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(
-                R.id.fragment_container,
-                NutritionFragment()
-            ).commit()
+            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, NutritionFragment()).commit()
         }
         view.findViewById<View>(R.id.nav_profile).setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(
-                R.id.fragment_container,
-                ProfileFragment()
-            ).commit()
+            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, ProfileFragment()).commit()
         }
     }
 
     private fun setupWorkoutRecommendations() {
-
         val workouts = WorkoutRecommendation.getDailyWorkouts()
-
         val adapter = WorkoutAdapter(workouts) { workout ->
-
             val fragment = WorkoutDetailFragment()
-
             val bundle = Bundle()
             bundle.putString("name", workout.name)
             bundle.putString("slogan", workout.slogan)
             bundle.putInt("duration", workout.duration)
             bundle.putInt("calories", workout.calories)
-
             fragment.arguments = bundle
-
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit()
         }
-
-        recyclerWorkouts.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
+        recyclerWorkouts.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recyclerWorkouts.adapter = adapter
     }
-
 }

@@ -7,7 +7,7 @@
     android:padding="20dp">
 
     <ImageView
-        android:id="@+id/btn_privacy_back"
+        android:id="@+id/btn_help_back"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:src="@drawable/ic_back"
@@ -16,23 +16,23 @@
         app:tint="@color/white" />
 
     <TextView
-        android:id="@+id/tv_privacy_title"
+        android:id="@+id/tv_help_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Privacy &amp; Security"
+        android:text="Help &amp; Support"
         android:textColor="@color/white"
         android:textSize="28sp"
-        app:layout_constraintBottom_toBottomOf="@id/btn_privacy_back"
-        app:layout_constraintStart_toEndOf="@id/btn_privacy_back"
-        app:layout_constraintTop_toTopOf="@id/btn_privacy_back" />
+        app:layout_constraintBottom_toBottomOf="@id/btn_help_back"
+        app:layout_constraintStart_toEndOf="@id/btn_help_back"
+        app:layout_constraintTop_toTopOf="@id/btn_help_back" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_privacy_title">
+        app:layout_constraintTop_toBottomOf="@id/tv_help_title">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,35 +40,35 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_change_password"
+                android:id="@+id/tv_faqs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:background="@drawable/bg_card_gray"
                 android:padding="20dp"
-                android:text="Change Password"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-            
-            <TextView
-                android:id="@+id/tv_privacy_policy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_card_gray"
-                android:padding="20dp"
-                android:text="Privacy Policy"
+                android:text="FAQs"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/tv_terms_service"
+                android:id="@+id/tv_contact_us"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:background="@drawable/bg_card_gray"
                 android:padding="20dp"
-                android:text="Terms of Service"
+                android:text="Contact Us"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_card_gray"
+                android:padding="20dp"
+                android:text="App Feedback"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 

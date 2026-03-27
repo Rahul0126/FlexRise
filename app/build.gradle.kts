@@ -6,9 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.flexrise"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.flexrise"
@@ -52,5 +50,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-messaging")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
     implementation("com.github.bumptech.glide:glide:4.16.0")
 }
