@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/your_activity"
+                android:textColor="@color/white"
+                android:textSize="32sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/tv_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/current_date"
+                android:textColor="@color/text_secondary"
+                android:textSize="18sp" />
+
+            <!-- Dynamic Horizontal Calendar -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/calendar_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <!-- Today's Challenge -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/challenge_card"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/bg_card_lime"
+                android:padding="20dp">
+                <TextView android:id="@+id/tv_challenge_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/today_challenge" android:textColor="@color/black" android:textSize="22sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/tap_to_start" android:textColor="#444444" android:textSize="18sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tv_challenge_title" />
+                <ImageView android:layout_width="100dp" android:layout_height="match_parent" android:scaleType="centerInside" android:src="@drawable/challenge_runner" app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Stats -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+                <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_marginEnd="8dp" android:layout_weight="1" android:background="@drawable/bg_card_blue" android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/steps" android:textColor="#444444" android:textSize="20sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                    <TextView android:id="@+id/tv_steps_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textColor="#444444" android:textSize="24sp" android:textStyle="bold" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_marginStart="8dp" android:layout_weight="1" android:background="@drawable/bg_card_yellow" android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/goals" android:textColor="#444444" android:textSize="20sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                    <TextView android:id="@+id/tv_goals_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0%" android:textColor="#444444" android:textSize="24sp" android:textStyle="bold" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <!-- Daily Progress with Circular ProgressBar -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_card_dark"
+                android:padding="24dp">
+
+                <TextView
+                    android:id="@+id/tv_daily_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/daily_progress"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_marginTop="20dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/cpb_circle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_daily_title" />
+
+                <TextView
+                    android:id="@+id/tv_percentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/progress_bar"
+                    app:layout_constraintEnd_toEndOf="@id/progress_bar"
+                    app:layout_constraintStart_toStartOf="@id/progress_bar"
+                    app:layout_constraintTop_toTopOf="@id/progress_bar" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="@id/progress_bar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/progress_bar"
+                    app:layout_constraintTop_toTopOf="@id/progress_bar">
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                        <View android:layout_width="12dp" android:layout_height="12dp" android:background="@drawable/bg_dot_purple" android:layout_marginEnd="8dp" />
+                        <TextView android:id="@+id/tv_target_kcal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Target: 0 kcal" android:textColor="@color/white" android:textSize="14sp" />
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:gravity="center_vertical" android:orientation="horizontal">
+                        <View android:layout_width="12dp" android:layout_height="12dp" android:background="@drawable/bg_dot_green" android:layout_marginEnd="8dp" />
+                        <TextView android:id="@+id/tv_burned_kcal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Burned: 0 kcal" android:textColor="@color/white" android:textSize="14sp" />
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:gravity="center_vertical" android:orientation="horizontal">
+                        <View android:layout_width="12dp" android:layout_height="12dp" android:background="@drawable/bg_dot_pink" android:layout_marginEnd="8dp" />
+                        <TextView android:id="@+id/tv_remaining_kcal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Remaining: 0 kcal" android:textColor="@color/white" android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/bg_bottom_nav"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout android:id="@+id/nav_home" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_home" app:tint="@color/accent_lime" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_home" android:textColor="@color/accent_lime" android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/nav_activity" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_activity" app:tint="@color/text_secondary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_activity" android:textColor="@color/text_secondary" android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/nav_nutrition" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_nutrition" app:tint="@color/text_secondary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_nutrition" android:textColor="@color/text_secondary" android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/nav_profile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_profile" app:tint="@color/text_secondary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_profile" android:textColor="@color/text_secondary" android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

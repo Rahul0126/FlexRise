@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nutrition"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/tv_nutrition_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="March 2024"
+                android:textColor="@color/text_secondary"
+                android:textSize="18sp" />
+
+            <!-- Dynamic Horizontal Calendar -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/nutrition_calendar_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <!-- Daily Intake Card -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_card_dark"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/tv_intake_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/daily_intake"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_intake_display"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="0 / 2000 kcal"
+                    android:textColor="@color/accent_lime"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_intake_label" />
+
+                <ProgressBar
+                    android:id="@+id/pb_intake"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:layout_marginTop="16dp"
+                    android:max="2000"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/bg_progress_custom"
+                    app:layout_constraintTop_toBottomOf="@id/tv_intake_display" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/meals_today"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <!-- Breakfast Card -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/card_breakfast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp">
+                    <TextView android:id="@+id/tv_breakfast_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/breakfast" android:textColor="@color/white" android:textSize="22sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                    <TextView android:id="@+id/tv_breakfast_desc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Tap to log" android:textColor="@color/text_secondary" android:textSize="18sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tv_breakfast_label" />
+                    <TextView android:id="@+id/tv_breakfast_kcal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 kcal" android:textColor="@color/accent_lime" android:textSize="22sp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- Lunch Card -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/card_lunch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp">
+                    <TextView android:id="@+id/tv_lunch_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/lunch" android:textColor="@color/white" android:textSize="22sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                    <TextView android:id="@+id/tv_lunch_desc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Tap to log" android:textColor="@color/text_secondary" android:textSize="18sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tv_lunch_label" />
+                    <TextView android:id="@+id/tv_lunch_kcal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 kcal" android:textColor="@color/accent_lime" android:textSize="22sp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- Dinner Card -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/card_dinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp">
+                    <TextView android:id="@+id/tv_dinner_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/dinner" android:textColor="@color/white" android:textSize="22sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                    <TextView android:id="@+id/tv_dinner_desc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Tap to log" android:textColor="@color/text_secondary" android:textSize="18sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tv_dinner_label" />
+                    <TextView android:id="@+id/tv_dinner_kcal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 kcal" android:textColor="@color/accent_lime" android:textSize="22sp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- Snacks Card -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/card_snacks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp">
+                    <TextView android:id="@+id/tv_snacks_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/snacks" android:textColor="@color/white" android:textSize="22sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                    <TextView android:id="@+id/tv_snacks_desc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Tap to log" android:textColor="@color/text_secondary" android:textSize="18sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tv_snacks_label" />
+                    <TextView android:id="@+id/tv_snacks_kcal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 kcal" android:textColor="@color/accent_lime" android:textSize="22sp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/bg_bottom_nav"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout android:id="@+id/nav_home" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_home" app:tint="@color/text_secondary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_home" android:textColor="@color/text_secondary" android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/nav_activity" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_activity" app:tint="@color/text_secondary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_activity" android:textColor="@color/text_secondary" android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/nav_nutrition" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_nutrition" app:tint="@color/accent_lime" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_nutrition" android:textColor="@color/accent_lime" android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/nav_profile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_profile" app:tint="@color/text_secondary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_profile" android:textColor="@color/text_secondary" android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

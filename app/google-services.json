@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1048330569368",
+    "firebase_url": "https://flexrise-603ad-default-rtdb.firebaseio.com",
+    "project_id": "flexrise-603ad",
+    "storage_bucket": "flexrise-603ad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048330569368:android:fb031d906009e9959632ed",
+        "android_client_info": {
+          "package_name": "com.example.flexrise"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOPYLQ-TUFtlcVr9V1B3_ePSaAzt6F6Vk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

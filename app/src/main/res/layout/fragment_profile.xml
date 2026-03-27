@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Profile Image -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_profile"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="24dp"
+                android:padding="2dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background"
+                app:shapeAppearanceOverlay="@style/CircleImage"
+                app:strokeColor="@color/accent_lime"
+                app:strokeWidth="2dp" />
+
+            <TextView
+                android:id="@+id/tv_profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/profile_name"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/profile_title"
+                android:textColor="@color/text_secondary"
+                android:textSize="18sp" />
+
+            <!-- Stats Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card_gray"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView android:id="@+id/tv_height_display" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/height_value" android:textColor="@color/white" android:textSize="20sp" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/height" android:textColor="@color/text_secondary" android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card_gray"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView android:id="@+id/tv_weight_display" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/weight_value" android:textColor="@color/white" android:textSize="20sp" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/weight" android:textColor="@color/text_secondary" android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card_gray"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/age_value" android:textColor="@color/white" android:textSize="20sp" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/age" android:textColor="@color/text_secondary" android:textSize="14sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="32dp"
+                android:text="@string/achievement"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <!-- Achievement Cards -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp">
+                    <TextView android:id="@+id/tv_streak_emoji" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔥" android:textSize="24sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                    <TextView android:id="@+id/tv_streak_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:text="@string/streak" android:textColor="@color/accent_lime" android:textSize="20sp" app:layout_constraintStart_toEndOf="@id/tv_streak_emoji" app:layout_constraintTop_toTopOf="@id/tv_streak_emoji" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/streak_desc" android:textColor="@color/text_secondary" android:textSize="16sp" app:layout_constraintStart_toStartOf="@id/tv_streak_title" app:layout_constraintTop_toBottomOf="@id/tv_streak_title" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp">
+                    <TextView android:id="@+id/tv_steps_emoji" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🏃" android:textSize="24sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                    <TextView android:id="@+id/tv_steps_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:text="@string/ten_k_steps" android:textColor="@color/accent_lime" android:textSize="20sp" app:layout_constraintStart_toEndOf="@id/tv_steps_emoji" app:layout_constraintTop_toTopOf="@id/tv_steps_emoji" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/ten_k_steps_desc" android:textColor="@color/text_secondary" android:textSize="16sp" app:layout_constraintStart_toStartOf="@id/tv_steps_title" app:layout_constraintTop_toBottomOf="@id/tv_steps_title" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp">
+                    <TextView android:id="@+id/tv_healthy_emoji" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🥗" android:textSize="24sp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+                    <TextView android:id="@+id/tv_healthy_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:text="@string/healthy_week" android:textColor="@color/accent_lime" android:textSize="20sp" app:layout_constraintStart_toEndOf="@id/tv_healthy_emoji" app:layout_constraintTop_toTopOf="@id/tv_healthy_emoji" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/healthy_week_desc" android:textColor="@color/text_secondary" android:textSize="16sp" app:layout_constraintStart_toStartOf="@id/tv_healthy_title" app:layout_constraintTop_toBottomOf="@id/tv_healthy_title" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <!-- Settings Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="32dp"
+                android:text="Settings"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:id="@+id/settings_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_edit_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp"
+                    android:text="Edit Profile"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_notifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp"
+                    android:text="Notifications"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_privacy_security"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp"
+                    android:text="Privacy &amp; Security"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_help_support"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp"
+                    android:text="Help &amp; support"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/tv_logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:background="@drawable/bg_card_gray"
+                    android:padding="20dp"
+                    android:text="Logout"
+                    android:textColor="@color/red"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/bg_bottom_nav"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout android:id="@+id/nav_home" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_home" app:tint="@color/text_secondary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_home" android:textColor="@color/text_secondary" android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/nav_activity" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_activity" app:tint="@color/text_secondary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_activity" android:textColor="@color/text_secondary" android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/nav_nutrition" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_nutrition" app:tint="@color/text_secondary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_nutrition" android:textColor="@color/text_secondary" android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/nav_profile" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_profile" app:tint="@color/accent_lime" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/nav_profile" android:textColor="@color/accent_lime" android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
